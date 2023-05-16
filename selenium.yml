@@ -1,0 +1,29 @@
+version: "3"
+services:
+  hub:
+    image: selenium/hub:3.141.59
+    container_name: selenium-hub
+    shm_size: '1gb'
+    ports:
+      - "4444:4444"
+
+  chrome:
+    image: selenium/node-chrome:3.141.59
+    container_name: selenium-chrome
+    ports:
+      - "5555:5555"
+    depends_on:
+      - hub
+    environment:
+      - HUB_HOST=selenium-hub
+
+  chrome-debug:
+    image: selenium/node-chrome-debug:3.141.59
+    container_name: selenium-chrome-debug
+    ports:
+      - "5900:5900"
+      - "7900:7900"
+    depends_on:
+      - hub
+    environment:
+      - HUB_HOST=selenium-hub

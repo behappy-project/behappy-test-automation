@@ -1,0 +1,24 @@
+version: '3'
+services:
+  automation-test:
+    container_name: automation-test
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: 'always'
+    privileged: true
+    volumes:
+      - /data/automation_test/Outputs/:/app/Outputs/
+    environment:
+      DRIVER_ADDR: http://192.168.56.100:4444/wd/hub
+      DRIVER_VERSION: 94.0.4606.61
+      FLAG_ENV: Prod
+      IS_SSH: false
+      XXL_JOB_ADMIN_ADDRESSES: http://192.168.56.100:38080/xxl-job-admin
+      XXL_JOB_ACCESSTOKEN: default_token
+      XXL_JOB_EXECUTOR_APPNAME: xxl-job-executor-automation-test
+      XXL_JOB_EXECUTOR_ADDRESS: http://192.168.56.100:39081
+    ports:
+      - "39080:80"
+      - "39022:22"
+      - "39081:9999"
