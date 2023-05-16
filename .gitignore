@@ -1,0 +1,31 @@
+# 忽略编译的Python文件
+*.pyc
+*.pyo
+__pycache__/
+
+# 忽略生成的文件和目录
+dist/
+build/
+*.egg-info/
+
+# 忽略本地配置文件和敏感信息
+*.env
+*.env.*
+*.log
+*.key
+*.pem
+
+# 忽略IDE和编辑器生成的文件和目录
+.idea/
+.vscode/
+*.pydevproject
+*.project
+*.settings/
+
+# 忽略任何其他的临时或生成的文件
+*~
+*.bak
+*.swp
+
+# 忽略Outputs
+Outputs
