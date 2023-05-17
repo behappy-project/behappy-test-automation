@@ -39,6 +39,6 @@ RUN chmod +x ./start.sh \
 ENV IS_SSH=true
 COPY . .
 # 暴露端口
-EXPOSE 22 80 8081
+EXPOSE 22 80 9999
 # 启动
 CMD ["sh", "start.sh"]
