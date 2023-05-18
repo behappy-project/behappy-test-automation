@@ -55,7 +55,7 @@ class BasePage:
                 logger.logging.info("等待{}元素可见,耗时{}".format(loc, duration))
                 return element
             else:
-                logger.logging.info("等待{}元素可见操作超时{}".format(loc, duration))
+                logger.logging.info("等待{}元素不可见,耗时{}".format(loc, duration))
 
     # 查找元素
     def is_element_exsits(self, loc, doc=""):
