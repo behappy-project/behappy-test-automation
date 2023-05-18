@@ -127,7 +127,7 @@ if __name__ == '__main__':
         elif caseType == 'tag':
             # 执行带标签的case
             # python3 runner.py tag P0
-            # sudo python3 runner.py tag P0,P1
+            # sudo python3 runner.py tag P0
             tagName = input_list[2]
             if len(input_list) == 3:
                 pytest.main(["-v", "-m", tagName, "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),

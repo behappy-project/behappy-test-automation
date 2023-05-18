@@ -41,16 +41,21 @@ class BasePage:
         """
         start_time = time.time()
         try:
-
-            WebDriverWait(self.driver, timeout, frequency).until(EC.visibility_of_element_located(loc))
+            element = WebDriverWait(self.driver, timeout, frequency). \
+                until(lambda driver: driver.find_element(*loc))
         except:
             logger.logging.exception("等待{}元素可见超时".format(loc))
             self.do_save_screenshot(doc)
             raise
         else:
+            isVisible = EC.visibility_of_element_located(loc)
             end_time = time.time()
             duration = end_time - start_time
-            logger.logging.info("等待{}元素可见,耗时{}".format(loc, duration))
+            if isVisible != 'False':
+                logger.logging.info("等待{}元素可见,耗时{}".format(loc, duration))
+                return element
+            else:
+                logger.logging.info("等待{}元素可见操作超时{}".format(loc, duration))
 
     # 查找元素
     def is_element_exsits(self, loc, doc=""):
