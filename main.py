@@ -12,9 +12,11 @@ import pytest
 
 from Common.clear_cache import *
 from Common.file_config import FileConfig
+from Common.global_var import GlobalVar
 
 if __name__ == '__main__':
-    formatted_time = datetime.now().strftime('%Y%m%d_%H_%M_%S')
+    global_var = GlobalVar()
+    formatted_time = global_var.base_dir
     # 执行mark
     tag = 'P3'
     # 判断缓存文件是否存在，删除历史结果数据

@@ -6,13 +6,23 @@
 
 __author__ = 'xiaowu'
 
+from datetime import datetime
 
+'''
+全局配置，单例
+'''
 class GlobalVar():
-    type = "chrome"
+    __instance = None
 
-    def set_value(self, value):
-        GlobalVar.type = value
+    def __new__(cls, *args, **kwargs):
+        if not cls.__instance:
+            cls.__instance = super().__new__(cls)
+            cls.__instance.browser = "chrome"
+            cls.__instance.base_dir = datetime.now().strftime('%Y%m%d_%H_%M_%S')
+        return cls.__instance
 
-    def get_value(self):
-        # 获得一个全局变量，不存在则提示读取对应变量失败
-        return GlobalVar.type
+    def set_browser(self, value):
+        self.__instance.browser = value
+
+    def set_base_dir(self, value):
+        self.__instance.base_dir = value

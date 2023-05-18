@@ -13,6 +13,7 @@ from selenium import webdriver
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from Common import config, logger
+from Common.global_var import GlobalVar
 
 
 # @pytest.fixture，框架提供的能力。将browser()打上注解，供别人做初始化的调用。
@@ -22,7 +23,8 @@ from Common import config, logger
 # 这通常适用于需要在整个测试过程中共享资源的情况，例如登录凭证、全局配置等。
 @pytest.fixture(scope="class")
 def browser(request):
-    name = request.config.getoption("--browser")
+    global_var = GlobalVar()
+    name = global_var.browser
     if name == "chrome":
         # 前置：打开浏览器
         # 修改页面加载策略
@@ -98,7 +100,7 @@ def pytest_collection_modifyitems(items):
 
 # 添加自定义的命令行选项，例如指定测试环境、配置文件路径
 # 添加命令行参数 --browser
-def pytest_addoption(parser):
-    parser.addoption(
-        "--browser", action="store", default="chrome", help="browser option: firefox or chrome"
-    )
+# def pytest_addoption(parser):
+#     parser.addoption(
+#         "--browser", action="store", default="chrome", help="browser option: firefox or chrome"
+#     )

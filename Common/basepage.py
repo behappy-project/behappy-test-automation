@@ -20,6 +20,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from Common import logger
 from Common.file_config import FileConfig
+from Common.global_var import GlobalVar
 
 
 # 任何一个步骤都会做到  捕获异常、日志输出、失败截图
@@ -287,9 +288,10 @@ class BasePage:
         :param doc:
         :return:
         """
+        global_var = GlobalVar()
         cur_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d%H%M%S')
         # file = screenshot_dir+"/{}_{}.png".format(doc,cur_time)
-        file = FileConfig().get_path(type="screenshots") + "/{}_{}.png".format(doc, cur_time)
+        file = FileConfig().get_path(type="screenshots") + "/{}/{}_{}.png".format(global_var.base_dir, doc, cur_time)
         try:
             self.driver.save_screenshot(file)
         except (NoSuchElementException, TimeoutException) as e:
