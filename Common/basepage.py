@@ -12,6 +12,7 @@ import calendar as cal
 import datetime
 import time
 
+from selenium.common.exceptions import *
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -43,7 +44,7 @@ class BasePage:
         try:
             element = WebDriverWait(self.driver, timeout, frequency). \
                 until(lambda driver: driver.find_element(*loc))
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("等待{}元素可见超时".format(loc))
             self.do_save_screenshot(doc)
             raise
@@ -66,8 +67,8 @@ class BasePage:
         """
         try:
             ele = self.driver.find_element(*loc)
-        except:
-            logger.logging.exception("等待 {} 元素存在，失败！".format(loc))
+        except (NoSuchElementException, TimeoutException) as e:
+            logger.logging.warning("该元素 {} 不存在！".format(loc))
             self.do_save_screenshot(doc)
             return False
         else:
@@ -83,16 +84,15 @@ class BasePage:
         """
         try:
             ele = self.driver.find_element(*loc)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("等待 {} 元素存在，失败！".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("查找{}的元素{}成功。".format(doc, loc))
             return ele
 
-        # 查找元素是否显示
-
+    # 查找元素是否显示
     def get_element_isDisplay(self, loc, doc=""):
         """
         :param loc:
@@ -101,8 +101,8 @@ class BasePage:
         """
         try:
             self.get_element_text(loc, doc="", timeout=2)
-        except:
-            logger.logging.exception("页面{}元素不存在！".format(loc))
+        except (NoSuchElementException, TimeoutException) as e:
+            logger.logging.warning("页面{}元素不存在！".format(loc))
             self.do_save_screenshot(doc)
             return False
         else:
@@ -124,10 +124,10 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             ele.send_keys(value)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("向{}元素输入{}失败".format(loc, value))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("向{}元素输入{}成功".format(loc, value))
 
@@ -146,10 +146,10 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             ele.clear()
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("清除{}内容失败".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("清除{}内容成功".format(loc))
 
@@ -168,10 +168,10 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             ele.click()
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("向{}元素点击失败".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("向{}元素点击成功".format(loc))
 
@@ -190,10 +190,10 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             self.driver.execute_script("(arguments[0]).click()", ele)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("向{}元素点击失败".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("向{}元素点击成功".format(loc))
 
@@ -211,10 +211,10 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             text = ele.text
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("获取{}元素文本值失败".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("获取{}元素文本值成功".format(loc))
             return text
@@ -234,10 +234,10 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             value = ele.get_attribute(attr)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("获取{}元素属性值失败".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("获取{}元素属性值成功".format(loc))
             return value
@@ -251,10 +251,10 @@ class BasePage:
         """
         try:
             ele = self.driver.find_elements(*loc)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("等待 {} 元素存在，失败！".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("查找{}的元素{}成功。".format(doc, loc))
             return ele
@@ -273,10 +273,10 @@ class BasePage:
         ele = self.get_elements(loc, doc)
         try:
             value = len(ele)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("获取{}元素属性值失败".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("获取{}元素属性值成功".format(loc))
             return value
@@ -292,7 +292,7 @@ class BasePage:
         file = FileConfig().get_path(type="screenshots") + "/{}_{}.png".format(doc, cur_time)
         try:
             self.driver.save_screenshot(file)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("网页截图操作失败")
         else:
             logger.logging.info("网页截图成功，存储路径为{}".format(file))
@@ -311,10 +311,10 @@ class BasePage:
     #         # 往编辑当中，输入文件路径 。
     #         win32gui.SendMessage(edit, win32con.WM_SETTEXT, None, filepath)  # 发送文件路径
     #         win32gui.SendMessage(dialog, win32con.WM_COMMAND, 1, button)  # 点击打开按钮
-    #     except:
+    #     except (NoSuchElementException, TimeoutException) as e:
     #         logger.logging.exception("上传文件{}失败".format(filepath))
     #         self.do_save_screenshot(doc)
-    #         raise
+    #         raise e
     #     else:
     #         logger.logging.info("上传文件{}成功".format(filepath))
 
@@ -325,10 +325,10 @@ class BasePage:
             windows = self.driver.window_handles
             # 切换到最新窗口
             self.driver.switch_to.window(windows[-1])
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("切换窗口失败")
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("切换窗口成功")
 
@@ -344,10 +344,10 @@ class BasePage:
             eles = self.driver.find_elements(*loc)
             for ele in eles:
                 check_results.append(ele.text)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("获取 {} 元素文本值存在，失败！".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("获取{}的元素{}文本值成功。".format(doc, loc))
             return check_results
@@ -370,10 +370,10 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             default_value = ele.get_attribute('value')
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("获取{}元素文本值失败".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("获取{}元素文本值成功".format(loc))
             return default_value
@@ -392,10 +392,10 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             ele.send_keys(value)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("向{}元素输入{}失败".format(loc, value))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("向{}元素输入{}成功".format(loc, value))
 
@@ -436,10 +436,10 @@ class BasePage:
         try:
             for one in range(count):
                 ele.send_keys(Keys.BACK_SPACE)
-        except:
+        except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("向{}元素输入删除键失败".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             logger.logging.info("向{}元素输入删除键成功".format(loc))
 
