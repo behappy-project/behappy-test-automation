@@ -39,7 +39,7 @@
 
 # 项目整体分层
 
-```json
+```text
 ├─Common					**公共方法层Common**
 ├─Outputs					**日志&报告层 Output**
 │  ├─allure_report
