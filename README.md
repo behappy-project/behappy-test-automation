@@ -37,6 +37,21 @@
 
 ![image-20230519141453956](README/image-20230519141453956.png)
 
+## 查看结果报告
+
+```
+allure报表：http://xxx:39080/allure_report
+pytest报表：http://xxx:39080/pytest_report
+日志文件：http://xxx:39080/running_logs
+错误截图：http://xxx:39080/running_screenshots
+```
+
+访问`http://xxx:39080/allure_report`
+
+![image-20230519152156956](README/image-20230519152156956.png)
+
+![image-20230519152223277](README/image-20230519152223277.png)
+
 # 项目整体分层
 
 ```text
@@ -135,9 +150,9 @@ allure --version
 
 ### 实现场景
 
-- 访问百度网站，搜索“搜狗”，搜索结果第一条数据的名称为 搜狗
+- 访问百度网站，搜索`搜狗`，搜索结果第一条数据的名称为 `搜狗`
 
-- 访问百度网站，搜索“淘宝”，搜索结果第一条数据的名称为 淘宝
+- 访问百度网站，搜索`淘宝`，搜索结果第一条数据的名称为 `淘宝网 - 淘！我喜欢`
 
 ### 封装页面元素
 
@@ -258,6 +273,7 @@ class TestBaidu:
 
         result_text = BD(refresh).search_sougou()
         logger.logging.info("搜索结果：{}".format(result_text))
+        # 此断言结果为False
         assert result_text == '搜狗'
 
     @pytest.mark.P1
@@ -268,6 +284,7 @@ class TestBaidu:
         断言：结果列表展示淘宝
         """
         result_text = BD(refresh).search_taobao()
+        # 此断言结果为True
         assert result_text == '淘宝网 - 淘！我喜欢'
 ```
 
