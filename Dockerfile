@@ -35,7 +35,7 @@ COPY start.sh ./start.sh
 # 下载依赖
 COPY requirements.txt ./requirements.txt
 RUN chmod +x ./start.sh \
-    && pip3 install -r requirements.txt
+    && pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
 ENV IS_SSH=true
 COPY . .
 # 暴露端口

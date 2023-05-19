@@ -18,7 +18,7 @@ root = os.path.dirname(os.path.abspath(__file__))
 
 
 @allure.feature("模块：百度搜索")
-class TestChannel:
+class TestBaidu:
 
     # function 默认参数传递，autouse=True 自动调用fixture功能
     @pytest.fixture(scope="class", autouse=True)
