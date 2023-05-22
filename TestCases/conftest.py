@@ -93,9 +93,9 @@ def pytest_configure(config):
 # 测试用例收集完成时，将收集到的item的name和nodeid的中文显示在控制台上
 def pytest_collection_modifyitems(items):
     for item in items:
-        item.name = item.name.encode("utf-8").decode("unicode_escape")
-        # print(item.nodeid)
-        item._nodeid = item.nodeid.encode("utf-8").decode("unicode_escape")
+        name = item.name.encode("utf-8").decode("unicode_escape")
+        nodeid = item.nodeid.encode("utf-8").decode("unicode_escape")
+        logger.logging.info(f'测试用例名称：{name}\n测试用例nodeid：{nodeid}')
 
 
 # 添加自定义的命令行选项，例如指定测试环境、配置文件路径

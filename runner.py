@@ -122,10 +122,10 @@ if __name__ == '__main__':
             pytest.main(list2)
 
     elif caseType == 'tag':
-        # 执行带标签的case
-        # python3 runner.py tag P0
-        # sudo python3 runner.py tag P0
-        tagName = input_list[2]
+        # 执行带标签的case，如果需要执行多个tag，使用逗号分割
+        # python3 runner.py tag P1,P3
+        # sudo python3 runner.py tag P1,P3
+        tagName = input_list[2].replace(",", " or ")
         if len(input_list) == 3:
             pytest.main(["-v", "-m", tagName, "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
                          "--alluredir=Outputs/allure_report"])
