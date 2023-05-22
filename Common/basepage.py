@@ -10,6 +10,7 @@ import calendar as cal
 # import win32gui
 # import win32con
 import datetime
+import os
 import time
 
 from selenium.common.exceptions import *
@@ -291,7 +292,15 @@ class BasePage:
         global_var = GlobalVar()
         cur_time = datetime.datetime.strftime(datetime.datetime.now(), '%Y%m%d%H%M%S')
         # file = screenshot_dir+"/{}_{}.png".format(doc,cur_time)
-        file = FileConfig().get_path(type="screenshots") + "/{}/{}_{}.png".format(global_var.base_dir, doc, cur_time)
+        path_sep = os.path.sep
+        # 文件夹路径
+        screenshot_path = FileConfig().get_path(type="screenshots") + f"{path_sep}{global_var.base_dir}{path_sep}"
+        screenshot_dir = os.path.dirname(screenshot_path)
+        # 不存在则先创建
+        if not os.path.exists(screenshot_dir):
+            os.makedirs(screenshot_dir)
+        # 图片路径
+        file = f"{screenshot_path}{doc}_{cur_time}.png"
         try:
             self.driver.save_screenshot(file)
         except (NoSuchElementException, TimeoutException) as e:
