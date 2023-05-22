@@ -418,9 +418,9 @@ pytest.main()  # main中传入不同的指令用以执行指定测试用例
 
 略
 
-## 安装xxl-job-admin(2.4)
+## 安装xxl-job-admin(要求2.4)
 
-参考：https://github.com/behappy-project/behappy-docker-application/blob/master/xxl-job-admin/docker-compose.yml
+参考(记得修改对应版本)：https://github.com/behappy-project/behappy-docker-application/blob/master/xxl-job-admin/docker-compose.yml
 
 执行：`docker-compose -f docker-compose.yml up -d`
 
