@@ -18,7 +18,7 @@ if __name__ == '__main__':
     global_var = GlobalVar()
     formatted_time = global_var.base_dir
     # 执行mark
-    tag = 'P3'
+    tag = 'JD'
     # 判断缓存文件是否存在，删除历史结果数据
     if os.path.exists("{}\.pytest_cache".format(FileConfig().base_dir)) or os.path.exists(
             "{}/.pytest_cache".format(FileConfig().base_dir)):

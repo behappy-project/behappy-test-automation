@@ -10,6 +10,7 @@ import calendar as cal
 # import win32gui
 # import win32con
 import datetime
+import json
 import os
 import time
 
@@ -465,6 +466,34 @@ class BasePage:
         """注入cookie"""
         for i in allcookie:
             self.driver.add_cookie(i)
+
+    def save_cookies_to_file(self, file: str = 'cookies.txt'):
+        # 首先获取cookies保存至本地
+        cookies = self.get_cookies()
+        # 转换成字符串保存
+        json_cookies = json.dumps(cookies)
+        # 保存到txt文件
+        with open(file, 'w') as f:
+            f.write(json_cookies)
+
+    def add_exist_cookie(self, file: str = 'cookies.txt', domain: str = ''):
+        with open(file, 'r', encoding='utf8') as f:
+            cookies = json.loads(f.read())
+        # 给浏览器添加cookies
+        for i, cookie in enumerate(cookies):
+            cookies[i] = {
+                'domain': domain or cookie['domain'],
+                'name': cookie['name'],
+                'value': cookie['value'],
+                "expiry": 4114659613,
+                'path': cookie['path'],
+                'sameSite': cookie['sameSite'],
+                'httpOnly': cookie['httpOnly'],
+                'secure': cookie['secure']
+            }
+        self.put_cookie(cookies)
+        # 刷新网页，cookies才会成功
+        self.driver.refresh()
 
     # 滑动页面到底部
     def slide_to_bottom(self):

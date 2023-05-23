@@ -59,5 +59,9 @@ configs = toDict({
     },
     'flag': {
         'env': os.environ.get('FLAG_ENV', 'Release')
+    },
+    'jd': {
+        'username': '',
+        'password': '',
     }
 })

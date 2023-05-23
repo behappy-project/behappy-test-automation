@@ -23,6 +23,7 @@ class FileConfig:
         self.htmlreport_dir = ""
         self.logs_dir = ""
         self.screenshot_dir = ""
+        self.pic_dir = ""
 
         if platform.system() == "Windows":
             # Windows
@@ -42,6 +43,10 @@ class FileConfig:
                 # Project运行截图路径
                 self.screenshot_dir = os.path.join(self.base_dir, "Outputs\\running_screenshots")
                 return self.screenshot_dir
+            elif type == "pic":
+                # 图片
+                self.pic_dir = os.path.join(self.base_dir, "Outputs\\pic")
+                return self.pic_dir
             elif type == "Outputs":
                 self.Outputs_dir = os.path.join(self.base_dir, "Outputs")
                 return self.Outputs_dir
@@ -67,6 +72,10 @@ class FileConfig:
                 # Project运行截图路径
                 self.screenshot_dir = os.path.join(self.base_dir, "Outputs/running_screenshots")
                 return self.screenshot_dir
+            elif type == "pic":
+                # 图片
+                self.pic_dir = os.path.join(self.base_dir, "Outputs/pic")
+                return self.pic_dir
             elif type == "Outputs":
                 self.Outputs_dir = os.path.join(self.base_dir, "Outputs")
                 return self.Outputs_dir
