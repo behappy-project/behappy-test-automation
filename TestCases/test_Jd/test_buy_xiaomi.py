@@ -13,13 +13,15 @@ from Common import logger
 from PageObjects.step_jd import JD
 
 
+global driver
+
+
 @allure.feature("模块：京东")
 class TestJd:
 
     @pytest.fixture(scope="class", autouse=True)
     def setup(self, browser):
-        global driver
-        driver = browser
+        globals()['driver'] = browser
         driver.get('https://www.jd.com/')
 
     @pytest.mark.JD

@@ -16,6 +16,8 @@ from PageObjects.step_baidu_serach import BaiduPage as BD
 
 root = os.path.dirname(os.path.abspath(__file__))
 
+global driver
+
 
 @allure.feature("模块：百度搜索")
 class TestBaidu:
@@ -25,8 +27,7 @@ class TestBaidu:
     def setup(self, browser):
         # `browser`对应这conftest中的browser实例
         # 将browser实例赋值给全局变量driver，以便在测试类中的所有测试方法中都可以使用
-        global driver
-        driver = browser
+        globals()['driver'] = browser
         driver.get('https://www.baidu.com')
 
     @pytest.mark.P3
