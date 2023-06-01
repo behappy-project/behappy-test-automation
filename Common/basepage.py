@@ -14,6 +14,7 @@ import json
 import os
 import time
 
+from PIL import Image
 from selenium.common.exceptions import *
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -508,3 +509,17 @@ class BasePage:
         js = "var q=document.documentElement.scrollTop=0"
         self.driver.execute_script(js)
         time.sleep(1)
+
+    # 验证码截取，保存
+    def get_code_image(self, captcha_location: str = '', file: str = '/tmp/captcha.png'):
+        self.driver.get_screenshot_as_file(str)
+        element_code_img = self.driver.find_element_by_xpath(captcha_location)
+        left = element_code_img.location['x']
+        top = element_code_img.location['y']
+        right = left + element_code_img.size['width']
+        bottom = top + element_code_img.size['height']
+        im = Image.open(file)
+        im = im.crop((left, top, right, bottom))
+        im.save(file)
+
+
