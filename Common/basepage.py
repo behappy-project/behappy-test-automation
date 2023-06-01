@@ -55,7 +55,7 @@ class BasePage:
             isVisible = EC.visibility_of_element_located(loc)
             end_time = time.time()
             duration = end_time - start_time
-            if isVisible != 'False':
+            if isVisible:
                 logger.logging.info("等待{}元素可见,耗时{}".format(loc, duration))
                 return element
             else:
