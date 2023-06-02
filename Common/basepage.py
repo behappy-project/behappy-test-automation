@@ -331,6 +331,21 @@ class BasePage:
     #     else:
     #         logger.logging.info("上传文件{}成功".format(filepath))
 
+    # 打开新的窗口
+    def open_new_window(self, url: str, window_title: str = "new_window", doc=""):
+        try:
+            # 执行JavaScript代码在当前窗口中打开新窗口
+            self.driver.execute_script(f"window.open('{url}', '{window_title}')")
+            # 切换到新窗口
+            windows = self.driver.window_handles
+            self.driver.switch_to.window(windows[-1])
+        except BaseException as e:
+            logger.logging.exception("打开新的窗口失败")
+            self.do_save_screenshot(doc)
+            raise e
+        else:
+            logger.logging.info("打开新的窗口成功")
+
     # 切换窗口
     def switch_window(self, doc=""):
         try:
