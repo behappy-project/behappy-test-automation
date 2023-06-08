@@ -526,7 +526,7 @@ class BasePage:
         time.sleep(1)
 
     # 验证码截取，保存
-    def get_code_image(self, captcha_location: str = '', file: str = '/tmp/captcha.png'):
+    def save_code_image(self, captcha_location: str = '', file: str = '/tmp/captcha.png'):
         self.driver.get_screenshot_as_file(str)
         element_code_img = self.driver.find_element_by_xpath(captcha_location)
         left = element_code_img.location['x']
