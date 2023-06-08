@@ -8,10 +8,12 @@ __author__ = 'xiaowu'
 
 from datetime import datetime
 
-'''
-全局配置，单例
-'''
-class GlobalVar():
+
+class GlobalVar:
+    """
+    全局配置，单例
+    """
+
     __instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -19,6 +21,7 @@ class GlobalVar():
             cls.__instance = super().__new__(cls)
             cls.__instance.browser = "chrome"
             cls.__instance.base_dir = datetime.now().strftime('%Y%m%d_%H_%M_%S')
+            cls.__instance.dict_data = {}
         return cls.__instance
 
     def set_browser(self, value):
@@ -26,3 +29,6 @@ class GlobalVar():
 
     def set_base_dir(self, value):
         self.__instance.base_dir = value
+
+    def set_dict_data(self, key, value):
+        self.__instance.dict_data[key] = value
