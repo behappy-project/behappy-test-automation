@@ -420,9 +420,25 @@ pytest.main()  # main中传入不同的指令用以执行指定测试用例
 
 ## 安装xxl-job-admin(要求2.4)
 
-参考(记得修改对应版本)：https://github.com/behappy-project/behappy-docker-application/blob/master/xxl-job-admin/docker-compose.yml
+- 执行sql：https://github.com/xuxueli/xxl-job/blob/2.4.0/doc/db/tables_xxl_job.sql
 
-执行：`docker-compose -f docker-compose.yml up -d`
+```dockerfile
+version: '3'
+services:
+  xxl-job-admin:
+    # 对比原版，新增了ldap认证
+    image: wangxiaowu950330/xxl-job-admin:v2.4.0
+    restart: 'no'
+    container_name: xxl-job-admin
+    environment:
+      PARAMS: '--spring.datasource.url=jdbc:mysql://127.0.0.1:3306/automation_test?Unicode=true&characterEncoding=UTF-8 --spring.datasource.username=root --spring.datasource.password=root --spring.data.ldap.repositories.enabled=true --spring.ldap.urls=ldap://127.0.0.1:388 --spring.ldap.base=dc=extension,dc=net --spring.ldap.username=cn=admin,dc=extension,dc=net --spring.ldap.password=123456'
+    ports:
+      - "38080:8080"
+    volumes:
+      - ./data/applogs:/data/applogs
+```
+
+- 执行：`docker-compose -f docker-compose.yml up -d`
 
 ## 安装selenium grid
 
