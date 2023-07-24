@@ -6,6 +6,8 @@
 
 __author__ = 'xiaowu'
 
+import multiprocessing
+import os
 import sys
 from datetime import datetime
 
@@ -66,17 +68,19 @@ if __name__ == '__main__':
 
         if len(input_list) == 2:
             pytest.main(
-                ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time), "--alluredir=Outputs/allure_report"])
+                ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
+                 "--alluredir=Outputs/allure_report"])
         elif len(input_list) == 3:
             if "--reruns" in input_list:
                 pytest.main(
-                    ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time), "--alluredir=Outputs/allure_report",
+                    ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
+                     "--alluredir=Outputs/allure_report",
                      "--reruns", "1"])
             else:
-                n = input_list[2]
-                # n 是并发
+                num = input_list[2] or str(multiprocessing.cpu_count())
+                # num 是并发
                 pytest.main(["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
-                             "--alluredir=Outputs/allure_report", "-n", n])
+                             "--alluredir=Outputs/allure_report", "-n", num])
 
         elif len(input_list) == 4:
             a = ["runner.py", "all", "--reruns"]
@@ -86,7 +90,8 @@ if __name__ == '__main__':
 
         else:
             pytest.main(
-                ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time), "--alluredir=Outputs/allure_report", ])
+                ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
+                 "--alluredir=Outputs/allure_report", ])
 
     elif caseType == 'choose':
         caseName = input_list[2]
@@ -105,7 +110,8 @@ if __name__ == '__main__':
             caseName = "./TestCases/{}".format(caseName)
             # caseName="/Users/a58/Documents/58auto/web_ui_test/pytest_Web_Framework_V1/TestCases/{}".format(caseName)
             pytest.main(
-                ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time), "--alluredir=Outputs/allure_report",
+                ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
+                 "--alluredir=Outputs/allure_report",
                  caseName])
 
         else:
@@ -115,7 +121,8 @@ if __name__ == '__main__':
                 caseStr.append(case_name)
 
             # pytest.main(caseStr)
-            list1 = ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time), "--alluredir=Outputs/allure_report"]
+            list1 = ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
+                     "--alluredir=Outputs/allure_report"]
             list2 = list1 + caseStr
             # pytest.main(
             #     ["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time), "--alluredir=Outputs/allure_report", str(caseStr)])
@@ -134,7 +141,7 @@ if __name__ == '__main__':
                 pytest.main(["-v", "-m", tagName, "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
                              "--alluredir=Outputs/allure_report", "--reruns", "1"])
             else:
-                num = input_list[3]
+                num = input_list[3] or str(multiprocessing.cpu_count())
                 pytest.main(["-v", "-m", tagName, "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
                              "--alluredir=Outputs/allure_report", "-n", num])
         else:
