@@ -6,17 +6,13 @@
 
 __author__ = 'xiaowu'
 
-import multiprocessing
-import os
 import sys
-from datetime import datetime
 
 import pytest
 
 from Common.clear_cache import *
 from Common.file_config import FileConfig
 from Common.global_var import GlobalVar
-from Common.keep_strong import KeepStrong
 
 """
 一、支持脚本运行方式
@@ -77,8 +73,9 @@ if __name__ == '__main__':
                      "--alluredir=Outputs/allure_report",
                      "--reruns", "1"])
             else:
-                num = input_list[2] or str(multiprocessing.cpu_count())
+                num = input_list[2] or "auto"
                 # num 是并发
+                # -n auto：可以自动检测到系统的CPU核数；从测试结果来看，检测到的是逻辑处理器的数量，即假12核
                 pytest.main(["-v", "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
                              "--alluredir=Outputs/allure_report", "-n", num])
 
@@ -141,7 +138,7 @@ if __name__ == '__main__':
                 pytest.main(["-v", "-m", tagName, "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
                              "--alluredir=Outputs/allure_report", "--reruns", "1"])
             else:
-                num = input_list[3] or str(multiprocessing.cpu_count())
+                num = input_list[3] or "auto"
                 pytest.main(["-v", "-m", tagName, "--html=Outputs/pytest_report/{0}/index.html".format(formatted_time),
                              "--alluredir=Outputs/allure_report", "-n", num])
         else:

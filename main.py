@@ -21,7 +21,7 @@ if __name__ == '__main__':
     # 执行mark
     tag = 'P3 or P1'
     # cpu_count
-    # num = str(multiprocessing.cpu_count())
+    # num = "auto"
     num = "2"
     # 判断缓存文件是否存在，删除历史结果数据
     if os.path.exists("{}\.pytest_cache".format(FileConfig().base_dir)) or os.path.exists(
