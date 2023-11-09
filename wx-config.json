@@ -1,0 +1,16 @@
+[
+  {
+    "project_path": "D:\\Project\\study-vue-project\\weapp-qrcode",
+    "dev_tool_path": "D:\\Software\\微信web开发者工具\\cli.bat",
+    "debug_mode": "debug",
+    "outputs": "./Outputs/wx_report",
+    "platform": "ide",
+    "test_type": 2,
+    "app": "wx",
+    "close_ide": false,
+    "test_port": 9421,
+    "assert_capture": true,
+    "auto_relaunch": true,
+    "remote_connect_timeout": 180
+  }
+]

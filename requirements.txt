@@ -31,4 +31,4 @@ toml==0.10.2
 urllib3==1.26.6
 yagmail==0.15.277
 Pillow~=9.5.0
-
+minium~=1.4.6
