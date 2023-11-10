@@ -20,7 +20,7 @@ def get_path(file):
             if current_dir == os.path.dirname(current_dir):
                 return None  # 达到文件系统根目录但未找到项目根目录
             current_dir = os.path.dirname(current_dir)
-        return current_dir.replace('\\', '/')
+        return (current_dir + "/Wx/").replace('\\', '/')
 
     root = find_project_root()
 
