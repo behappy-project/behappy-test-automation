@@ -6,11 +6,8 @@
 
 __author__ = 'xiaowu'
 
-import sys
-
 import minium
 
-sys.path.append("..")
 from Wx.pages.pages.responsive.responsive import Responsive
 
 

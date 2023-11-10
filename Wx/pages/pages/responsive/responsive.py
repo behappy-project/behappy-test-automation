@@ -5,10 +5,6 @@
 
 __author__ = 'xiaowu'
 
-import sys
-
-sys.path.append("..")
-
 from Wx.base.basedef import BaseDef
 
 
