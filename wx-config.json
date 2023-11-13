@@ -10,7 +10,7 @@
     "close_ide": false,
     "test_port": 9421,
     "assert_capture": true,
-    "auto_relaunch": true,
+    "auto_relaunch": false,
     "remote_connect_timeout": 180
   }
 ]
