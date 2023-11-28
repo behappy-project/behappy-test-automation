@@ -3,7 +3,9 @@
 ## 技术沟通群
 <img src="https://raw.githubusercontent.com/wang-xiaowu/picture_repository/master/behappy_group.jpg" width="300px">
 
-
+> 注：
+>
+> wx-automaion分支为：结合minium进行微信自动化测试的Demo，部署环境为windows。如有需要可自行切换
 
 # 技术栈
 
