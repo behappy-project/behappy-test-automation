@@ -14,6 +14,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 from Common import config, logger
 from Common.global_var import GlobalVar
+from selenium.webdriver.chrome.service import Service as ChromeService
 
 
 # @pytest.fixture，框架提供的能力。将browser()打上注解，供别人做初始化的调用。
@@ -23,40 +24,31 @@ from Common.global_var import GlobalVar
 # 这通常适用于需要在整个测试过程中共享资源的情况，例如登录凭证、全局配置等。
 @pytest.fixture(scope="class")
 def browser(request):
-    global_var = GlobalVar()
-    name = global_var.browser
-    if name == "chrome":
-        # 前置：打开浏览器
-        # 修改页面加载策略
-        desired_capabilities = DesiredCapabilities.CHROME
-        # 注释这两行会导致最后输出结果的延迟，即等待页面加载完成再输出
-        desired_capabilities["pageLoadStrategy"] = "none"
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.set_capability("version", config.configs.driver.version)
-        chrome_options.set_capability("platform", 'ANY')
-        chrome_options.set_capability("javascriptEnabled", True)
-        # 实例化对象
-        # browser = webdriver.Chrome()
-        browser = webdriver.Remote(command_executor=config.configs.driver.addr, options=chrome_options)
-        # 窗口最大化
-        browser.maximize_window()
-        # 等待
-        time.sleep(1)
-        # 返回对象
-        yield browser
-    else:
-        # 前置：打开浏览器
-        # 修改页面加载策略
-        desired_capabilities = DesiredCapabilities.EDGE
-        # 注释这两行会导致最后输出结果的延迟，即等待页面加载完成再输出
-        desired_capabilities["pageLoadStrategy"] = "none"
-        browser = webdriver.Edge()
-        # 窗口最大化
-        browser.maximize_window()
-        # 等待
-        time.sleep(1)
-        # 返回对象
-        yield browser
+    # 前置：打开浏览器
+    options = webdriver.ChromeOptions()
+    options.add_experimental_option("excludeSwitches", ["enable-automation"])
+    options.add_experimental_option("useAutomationExtension", False)
+    service = ChromeService(executable_path=config.configs.driver.path)
+    browser = webdriver.Chrome(service=service, options=options)
+    # 窗口最大化
+    browser.maximize_window()
+    # 窗口设置固定大小
+    # browser.set_window_size(1020,835)
+    # 自用
+    # root = tk.Tk()
+    # screen_width = root.winfo_screenwidth()
+    # screen_height = root.winfo_screenheight()
+    # root.destroy()
+    # # Calculate the position for the right half of the screen
+    # window_width = int(screen_width) // 2
+    # window_height = int(screen_height)
+    # browser.set_window_size(window_width, window_height)
+    # browser.set_window_position(window_width, 0)
+    # 自用
+    # 等待
+    time.sleep(1)
+    # 返回对象
+    yield browser
 
     def fn():
         logger.logging.info("全部用例执行完, teardown driver!")

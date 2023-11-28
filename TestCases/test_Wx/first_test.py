@@ -8,7 +8,7 @@ __author__ = 'xiaowu'
 
 import minium
 
-from Wx.pages.pages.responsive.responsive import Responsive
+from PageObjects.step_wx_serach import WxPage
 
 
 class FirstTest(minium.MiniTest):
@@ -18,7 +18,7 @@ class FirstTest(minium.MiniTest):
 
     def __init__(self, methodName='runTest'):
         super().__init__(methodName)
-        self.Responsive = Responsive(self)
+        self.WxPage = WxPage(self)
 
     def test_get_system_info(self):
         sys_info = self.mini.get_system_info()
@@ -30,4 +30,4 @@ class FirstTest(minium.MiniTest):
         创建二维码
         :return:
         """
-        self.Responsive.input_tap_and_fill()
+        self.WxPage.input_tap_and_fill()

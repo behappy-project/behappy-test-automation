@@ -34,18 +34,37 @@ class BaseDef(minium.MiniTest):
 
     def current_path(self) -> str:
         """获取当前页面route"""
-        return self.mini.page.path
+        return self.page.path
 
     # 单个元素定位
-    def get_element(self, element):
+    def get_element(self, element, max_timeout=15):
         """
         :param element: 传入的元素
         :return: 返回单个元素
         """
         try:
-            ele = self.mini.page.wait_for(element)
+            ele = self.page.wait_for(element, max_timeout=max_timeout)
             if ele:
-                return self.page.get_element(element)
+                return self.page.get_element(element, max_timeout=max_timeout)
+
+            else:
+                print(
+                    f"################################找不到元素该元素{element}########################################")
+                raise
+        except AttributeError as e:
+            self.mini.logger.error(f"找不到该元素{element}，无法点击!!,报错原因{e}")
+            raise
+
+    # 多个元素定位
+    def get_elements(self, element, max_timeout=15):
+        """
+        :param element: 传入的元素
+        :return: 返回单个元素
+        """
+        try:
+            ele = self.page.wait_for(element, max_timeout=max_timeout)
+            if ele:
+                return self.page.get_elements(element, max_timeout=max_timeout)
 
             else:
                 print(
@@ -56,25 +75,21 @@ class BaseDef(minium.MiniTest):
             raise
 
     # 判断某个元素是否存在
-    def element_is_exists(self, element):
+    def element_is_exists(self, element, max_timeout=15):
         self.mini.logger.info(f"目前在断言元素{element}")
-        bool = self.mini.page.element_is_exists(element)
-        try:
-            assert bool == True
-        except AssertionError:
-            self.mini.logger.error(f"断言失败，错误元素{element}")
-            raise AssertionError(f"断言失败，错误元素{element}")
+        self.page.wait_for(element, max_timeout=max_timeout)
+        return self.page.element_is_exists(element, max_timeout=max_timeout)
 
     # 文本框输入
-    def send_key(self, element, text: str):
+    def send_key(self, element, text: str, max_timeout=15):
         sleep(1)
 
         try:
             for i in range(10):
-                ele = self.mini.page.wait_for(element, max_timeout=3)
+                ele = self.page.wait_for(element, max_timeout=max_timeout)
                 if ele:
                     self.mini.logger.info(f"目前在输入元素{element}")
-                    ele_text = self.page.get_element(element)
+                    ele_text = self.page.get_element(element, max_timeout=max_timeout)
                     ele_text.input(text)
                     return
                 else:
@@ -90,13 +105,13 @@ class BaseDef(minium.MiniTest):
         :param duration:滚动动画时长，单位 ms
         :return:
         """
-        self.mini.page.scroll_to(scroll_top, duration)
+        self.page.scroll_to(scroll_top, duration)
 
     # 操作弹窗
     def handle_modal(self, text):
         self.mini.native.handle_modal(btn_text=text)
 
-    def tap(self, element):
+    def tap(self, element, max_timeout=15):
         """
         :param element: 要点击的元素
         :return:
@@ -104,10 +119,10 @@ class BaseDef(minium.MiniTest):
         sleep(1)
         try:
             for i in range(10):
-                ele = self.mini.page.wait_for(element, max_timeout=3)
+                ele = self.page.wait_for(element, max_timeout=max_timeout)
                 if ele:
-                    self.mini.logger.info(f"目前在点击元素{element},点击方式Tap")
-                    ele_tap = self.mini.page.get_element(element)
+                    self.logger.info(f"目前在点击元素{element},点击方式Tap")
+                    ele_tap = self.page.get_element(element, max_timeout=max_timeout)
                     ele_tap.tap()
                     sleep(0.7)
                     return

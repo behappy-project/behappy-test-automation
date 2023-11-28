@@ -12,6 +12,7 @@ import requests
 
 class MiniTestApi:
     """
+    用于云测
     可用于集成CICD流程中
     待创建测试任务结束后发送报告到企业微信
     """

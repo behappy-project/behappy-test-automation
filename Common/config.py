@@ -54,8 +54,8 @@ configs = toDict({
         'db': os.environ.get('DB2_NAME', 'db2')
     },
     'driver': {
-        'addr': os.environ.get('DRIVER_ADDR', 'http://127.0.0.1:9515'),
-        'version': os.environ.get('DRIVER_VERSION', '94.0.4606.61')
+        # 驱动位置
+        'path': os.environ.get('DRIVER_PATH', 'D:/Software/chromedriver-win64/chromedriver.exe'),
     },
     'flag': {
         'env': os.environ.get('FLAG_ENV', 'Release')

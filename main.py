@@ -11,9 +11,12 @@ import pytest
 from Common.clear_cache import *
 from Common.file_config import FileConfig
 from Common.global_var import GlobalVar
+from PageObjects.step_wx_serach import WxPage
 
-# 如果需要本地开发测试小程序，将此处置为True
-is_wx = False
+# 如果需要本地开发/测试小程序，将此处置为True
+is_wx = True
+project_path = "D:\\Project\\study-vue-project\\weapp-qrcode"
+dev_tool_path = "D:\\Software\\微信web开发者工具\\cli.bat"
 
 if __name__ == '__main__':
     """
@@ -21,18 +24,17 @@ if __name__ == '__main__':
     :return:
     """
     if is_wx:
-        # 运行执行class文件中的指定用例
-        cmd0 = "minitest -m TestCases.test_Wx.first_test --case %s -c wx-config.json -g"
-        # 运行执行testcase文件中的指定用例
-        cmd1 = "minitest -m TestCases.test_Wx.first_test -c wx-config.json -g"
-        # 按照suite配置执行用例
-        cmd2 = "minitest -s wx-suite.json -c wx-config.json -g"
 
-        os.system(cmd0 % "test_create_qr_code")
-        # os.system(cmd2)
-        # 生成测试报告
-        output = "python3 -m http.server 12345 -d ./Outputs/wx_report"
-        os.system(output)
+        import minium
+        mini = minium.Minium({
+            "project_path": project_path,
+            "dev_tool_path": dev_tool_path
+        })
+
+        # base_def = BaseDef(mini)
+        weapp_u_query = WxPage(mini)
+        weapp_u_query.input_tap_and_fill()
+        mini.shutdown()
     else:
         global_var = GlobalVar()
         formatted_time = global_var.base_dir
