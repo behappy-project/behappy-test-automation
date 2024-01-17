@@ -7,6 +7,7 @@ __author__ = 'xiaowu'
 
 from time import sleep
 import minium
+from minium import MiniElementNotFoundError
 
 
 class BaseDef(minium.MiniTest):
@@ -46,14 +47,13 @@ class BaseDef(minium.MiniTest):
             ele = self.page.wait_for(element, max_timeout=max_timeout)
             if ele:
                 return self.page.get_element(element, max_timeout=max_timeout)
-
             else:
-                print(
+                self.app.logger.error(
                     f"################################找不到元素该元素{element}########################################")
-                raise
+                raise RuntimeError(f"找不到该元素{element}，超过等待时间，用例执行失败")
         except AttributeError as e:
-            self.mini.logger.error(f"找不到该元素{element}，无法点击!!,报错原因{e}")
-            raise
+            self.mini.logger.error(f"找不到该元素{element}!!,报错原因{e}")
+            raise e
 
     # 多个元素定位
     def get_elements(self, element, max_timeout=15):
@@ -65,19 +65,22 @@ class BaseDef(minium.MiniTest):
             ele = self.page.wait_for(element, max_timeout=max_timeout)
             if ele:
                 return self.page.get_elements(element, max_timeout=max_timeout)
-
             else:
-                print(
+                self.app.logger.error(
                     f"################################找不到元素该元素{element}########################################")
-                raise
+                raise MiniElementNotFoundError(f"找不到该元素{element}，超过等待时间，用例执行失败")
         except AttributeError as e:
-            self.mini.logger.error(f"找不到该元素{element}，无法点击!!,报错原因{e}")
-            raise
+            self.mini.logger.error(f"找不到该元素{element}!!,报错原因{e}")
+            raise e
 
     # 判断某个元素是否存在
     def element_is_exists(self, element, max_timeout=15):
         self.mini.logger.info(f"目前在断言元素{element}")
-        self.page.wait_for(element, max_timeout=max_timeout)
+        for i in range(3):
+            ele = self.page.wait_for(element, max_timeout=max_timeout)
+            if ele:
+                return self.page.element_is_exists(element, max_timeout=max_timeout)
+        self.app.logger.warning(f"wait_for未能找到该元素{element}")
         return self.page.element_is_exists(element, max_timeout=max_timeout)
 
     # 文本框输入
@@ -93,11 +96,11 @@ class BaseDef(minium.MiniTest):
                     ele_text.input(text)
                     return
                 else:
-                    self.mini.logger.error(f"找不到该元素{element}，无法点击!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            raise RuntimeError(f"找不到该元素{element}，超过等待时间，用例执行失败")
-        except AttributeError as e:
-            self.mini.logger.error(f"找不到该元素{element}，无法输入!!!,,报错原因{e}")
-            raise
+                    self.mini.logger.error(f"找不到该元素{element}，无法输入!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
+            self.page.get_element(element, max_timeout=max_timeout).input(text)
+        except Exception as e:
+            self.mini.logger.error(f"找不到该元素{element}，无法输入!!!,,报错原因: {e}")
+            raise e
 
     def scroll(self, scroll_top, duration=300):
         """
@@ -113,6 +116,7 @@ class BaseDef(minium.MiniTest):
 
     def tap(self, element, max_timeout=15):
         """
+        :param max_timeout:
         :param element: 要点击的元素
         :return:
         """
@@ -128,11 +132,11 @@ class BaseDef(minium.MiniTest):
                     return
                 else:
                     self.mini.logger.error(f"找不到该元素{element}，无法点击!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
-            raise RuntimeError(f"找不到该元素{element}，超过等待时间，用例执行失败")
-
-        except AttributeError as e:
-            self.mini.logger.error(f"找不到该元素{element}，无法输入!!!,,报错原因{e}")
-            raise
+            # 最后再次尝试点击
+            self.page.get_element(element, max_timeout=max_timeout).tap()
+        except Exception as e:
+            self.mini.logger.error(f"找不到该元素{element}，无法输入!!!,,报错原因: {e}")
+            raise e
 
     def show_action_sheets(self, item):
         """
