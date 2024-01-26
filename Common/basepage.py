@@ -7,15 +7,18 @@
 __author__ = 'xiaowu'
 
 import calendar as cal
-# import win32gui
-# import win32con
 import datetime
 import json
 import os
 import time
 
+import allure
+# import win32gui
+# import win32con
+import pyautogui
 from PIL import Image
 from selenium.common.exceptions import *
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -48,10 +51,10 @@ class BasePage:
         try:
             element = WebDriverWait(self.driver, timeout, frequency). \
                 until(lambda driver: driver.find_element(*loc))
-        except (NoSuchElementException, TimeoutException) as e:
+        except (NoSuchElementException, NoSuchWindowException, TimeoutException, ElementNotVisibleException) as e:
             logger.logging.exception("等待{}元素可见超时".format(loc))
             self.do_save_screenshot(doc)
-            raise
+            raise e
         else:
             isVisible = EC.visibility_of_element_located(loc)
             end_time = time.time()
@@ -128,7 +131,7 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             ele.send_keys(value)
-        except (NoSuchElementException, TimeoutException) as e:
+        except (NoSuchElementException, TimeoutException, ElementNotInteractableException) as e:
             logger.logging.exception("向{}元素输入{}失败".format(loc, value))
             self.do_save_screenshot(doc)
             raise e
@@ -150,7 +153,7 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             ele.clear()
-        except (NoSuchElementException, TimeoutException) as e:
+        except (NoSuchElementException, TimeoutException, ElementNotInteractableException) as e:
             logger.logging.exception("清除{}内容失败".format(loc))
             self.do_save_screenshot(doc)
             raise e
@@ -172,14 +175,14 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             ele.click()
-        except (NoSuchElementException, TimeoutException) as e:
+        except (NoSuchElementException, TimeoutException, ElementClickInterceptedException) as e:
             logger.logging.exception("向{}元素点击失败".format(loc))
             self.do_save_screenshot(doc)
             raise e
         else:
             logger.logging.info("向{}元素点击成功".format(loc))
 
-    # 点击
+    # 点击, 解决element click intercepted的问题
     def click_by_js(self, loc, timeout=8, frequency=0.5, doc=""):
         """
         :param loc:
@@ -194,7 +197,7 @@ class BasePage:
         ele = self.get_element(loc, doc)
         try:
             self.driver.execute_script("(arguments[0]).click()", ele)
-        except (NoSuchElementException, TimeoutException) as e:
+        except (NoSuchElementException, TimeoutException, ElementClickInterceptedException) as e:
             logger.logging.exception("向{}元素点击失败".format(loc))
             self.do_save_screenshot(doc)
             raise e
@@ -305,6 +308,8 @@ class BasePage:
         file = f"{screenshot_path}{doc}_{cur_time}.png"
         try:
             self.driver.save_screenshot(file)
+            logger.logging.info("操作保存图片：{}".format(file))
+            allure.attach.file(source=file, name=doc, attachment_type=allure.attachment_type.PNG)
         except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("网页截图操作失败")
         else:
@@ -347,12 +352,12 @@ class BasePage:
             logger.logging.info("打开新的窗口成功")
 
     # 切换窗口
-    def switch_window(self, doc=""):
+    # -1切换到最新窗口；0切换到第一个窗口；
+    def switch_window(self, index: int = -1, doc=""):
         try:
             # 获取所有的window列表
             windows = self.driver.window_handles
-            # 切换到最新窗口
-            self.driver.switch_to.window(windows[-1])
+            self.driver.switch_to.window(windows[index])
         except (NoSuchElementException, TimeoutException) as e:
             logger.logging.exception("切换窗口失败")
             self.do_save_screenshot(doc)
@@ -528,7 +533,7 @@ class BasePage:
     # 验证码截取，保存
     def save_code_image(self, captcha_location: str = '', file: str = '/tmp/captcha.png'):
         self.driver.get_screenshot_as_file(str)
-        element_code_img = self.driver.find_element_by_xpath(captcha_location)
+        element_code_img = self.driver.find_element(by=By.XPATH, value=captcha_location)
         left = element_code_img.location['x']
         top = element_code_img.location['y']
         right = left + element_code_img.size['width']
@@ -537,4 +542,51 @@ class BasePage:
         im = im.crop((left, top, right, bottom))
         im.save(file)
 
+    def ops_cookies(self, cookie, login_url):
+        # 清除cookie
+        self.driver.delete_all_cookies()
+        # 获取domain
+        start = login_url.find('//') + 2  # 获取域名开始的位置
+        domain = login_url[start:len(login_url)]  # 截取域名
+        cookie_arr = str(cookie).split(";")
+        cookies = []
+        for i, cookie in enumerate(cookie_arr):
+            _ = cookie.strip().split("=")
+            name = _[0]
+            value = _[1]
+            cookies.append({
+                'domain': domain,
+                'name': name,
+                'value': value,
+                "expiry": 4114659613,
+                'path': "/",
+                'sameSite': 'None',
+                'httpOnly': True,
+                'secure': False
+            })
+        # 写入cookie
+        self.put_cookie(cookies)
 
+    def file_upload_by_pyautogui(self, location, file: str):
+        """
+        文件上传
+        :param location:
+        :param file:
+        :return:
+        """
+        # https://stackoverflow.com/questions/8665072/how-to-upload-file-picture-with-selenium-python
+        # (By.XPATH, "//button[@title='Open file selector']")
+        element_present = EC.presence_of_element_located(location)  # Example xpath
+        WebDriverWait(self.driver, 10).until(element_present).click()  # This opens the windows file selector
+        # 'C:/path_to_file'
+        pyautogui.write(file)
+        # enter or 1
+        pyautogui.press('enter')
+
+    def asserts(self, expr, message: str = "校验错误", doc: str = ''):
+        try:
+            assert expr
+        except AssertionError:
+            # 断言失败时执行
+            self.do_save_screenshot(doc)
+            raise AssertionError(message)
