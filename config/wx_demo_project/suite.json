@@ -4,7 +4,7 @@
       "case_list": [
         "test_data_assert"
       ],
-      "pkg": "cases.wx.weapp_u_sopei_project.test_*"
+      "pkg": "cases.wx.demo_project.test_*"
     }
   ]
 }
