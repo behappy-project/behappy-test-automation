@@ -1,0 +1,62 @@
+# A key generation hash equals/le/ge/tostring method
+attrs==21.2.0
+# cachetools
+cachetools==5.0.0
+# use chardet.detect to detect the encoding type
+chardet==4.0.0
+# Color journal
+colorlog==6.6.0
+# Processing contains non-ASCII characters
+idna==3.7
+packaging==23.1
+# Pyparsing provides a series of classes that start with a single expression element to build a parser
+pyparsing==2.4.7
+# pytest
+pytest==6.2.5
+pluggy==1.0.0
+pytest-forked==1.4.0
+pytest-html==3.1.1
+pytest-metadata==1.11.0
+pytest-rerunfailures==10.2
+pytest-xdist==2.5.0
+allure-pytest==2.9.43
+allure-python-commons==2.9.43
+# requests
+requests==2.31.0
+# selenium
+selenium==4.15.2
+# Six is a Python 2 and 3 compatibility library
+six==1.16.0
+# yaml parsing
+PyYAML==6.0.1
+# toml parsing
+toml==0.10.2
+# .ini parsing
+iniconfig==1.1.1
+# xml parsing
+lxml==5.2.2
+# urllib3
+urllib3==2.2.1
+# mysql
+PyMySQL==1.0.2
+# graphical processing
+Pillow==10.3.0
+# Wechat automated test framework
+minium==1.5.5
+cssselect==1.2.0
+# PyAutoGUI allows Python scripts to control the mouse and keyboard and automatically interact with other applications
+pyautogui==0.9.54
+# json util
+ujson==5.9.0
+# ORM
+SQLAlchemy==2.0.29
+# A frame for the matcher object, used for assertions
+PyHamcrest==2.1.0
+# ssh client
+paramiko==3.4.0
+# log，encapsulated by logging
+nb_log==12.7
+# ocr
+ddddocr==1.5.3
+# PyAutoGUI
+PyAutoGUI==0.9.54

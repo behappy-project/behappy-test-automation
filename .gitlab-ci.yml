@@ -1,0 +1,17 @@
+stages:
+  - build
+
+##############################################
+build-project:
+  stage: build
+  script:
+    - echo "Building application..."
+    - cp -r ./** C:/Project/TestAutomation -Force
+    - cd C:/Project/TestAutomation
+    - pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
+    - echo "Building success..."
+  tags:
+    - automation_test
+  when: manual
+  only:
+    - master

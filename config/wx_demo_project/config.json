@@ -1,0 +1,40 @@
+[
+  {
+    "project_path": "C:\\Project\\demo",
+    "dev_tool_path": "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat",
+    "debug_mode": "info",
+    "outputs": ".\\output\\wx_demo_project\\report_data",
+    "platform": "ide",
+    "app": "wx",
+    "debug": false,
+    "full_reset": false,
+    "test_port": 9420,
+    "assert_capture": true,
+    "auto_relaunch": true,
+    "auto_authorize": true,
+    "enable_app_log": false,
+    "close_ide": false,
+    "use_push": false
+  },
+  {
+    "project_path": "C:\\Project\\demo",
+    "dev_tool_path": "C:\\Program Files (x86)\\Tencent\\微信web开发者工具\\cli.bat",
+    "debug_mode": "info",
+    "outputs": ".\\output\\wx_demo_project\\report_data",
+    "platform": "ide",
+    "app": "wx",
+    "debug": false,
+    "full_reset": false,
+    "test_port": 9421,
+    "assert_capture": true,
+    "auto_relaunch": true,
+    "auto_authorize": true,
+    "enable_app_log": false,
+    "close_ide": false,
+    "use_push": false,
+    "account_info": {
+      "open_id": "xxx",
+      "wx_nick_name": "xxx"
+    }
+  }
+]
