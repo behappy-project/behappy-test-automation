@@ -136,21 +136,61 @@ exit 0
 ## 小程序测试
 
 ```powershell
+chcp 65001
 Write-Host "开始执行！！！"
-# 执行case类型[可选值: byCases,byFile,bySuite]
-$case_type="xxx"
-# 执行case文件[eg: weapp_demo_project.test_data_project]
+# 使用utf8-nobom的方式写入文件
+function Write-Utf8NoBom {
+  param(
+    [Parameter(Mandatory = $true)]
+    [string] $Path,
+    [Parameter(Mandatory = $true)]
+    [string] $Content
+  )
+  # Convert the string content to a UTF-8 byte array
+  $utf8Bytes = [System.Text.Encoding]::UTF8.GetBytes($Content)
+  # Write the byte array to the specified file
+  [System.IO.File]::WriteAllBytes($Path, $utf8Bytes)
+}
+
+# 执行case类型[可选值: byCases,bySuite]
+$case_type="bySuite"
+# 执行case文件[eg: wx_demo_project.test_data_project]
 $case_file="xxx"
-# 执行case名称[eg: test_data_assert]，不支持多个
+# 执行case名称[eg: test_weapp_u]，不支持多个
 $case_name="xxx"
 # configJson文件路径[eg: config/wx_demo_project/config.json]
 $config_json="xxx"
 # suiteJson文件路径[eg: config/wx_demo_project/suite.json]
 $config_suite="xxx"
+# suite json param
+$suiteJsonContent = @"
+{
+  "pkg_list": [
+    {
+      "case_list": [
+        "test_weapp_u_1"
+      ],
+      "pkg": "cases.wx.wx_demo_project.test_*"
+    },
+    {
+      "case_list": [
+        "test_weapp_u_2"
+      ],
+      "pkg": "cases.wx.wx_demo_project.test_*"
+    }
+  ]
+}
+"@
+# 清空$config_suite
+Clear-Content "$config_suite"
+# 重新写入
+Write-Utf8NoBom -Path "$config_suite" -Content $suiteJsonContent
 $local=0
 # 环境
 $cmd_environment=$args[0..($args.Count-3)]
+
 python -u run_wx_test.py --local $local -ct "$case_type" -cf "$case_file" -cn "$case_name" -cj "$config_json" -cs "$config_suite"
+
 Write-Host "Good bye!"
 exit 0
 ```

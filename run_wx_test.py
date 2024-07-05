@@ -25,7 +25,7 @@ if __name__ == '__main__':
     # configJson: 对应多账号
     # - mode parallel: 并行模式，每个开发者工具按后台优先级算法进行分配
     parser = argparse.ArgumentParser()
-    parser.add_argument('-ct', '--case_type', help='执行case类型[可选值: byCases,byFile,bySuite]', type=str)
+    parser.add_argument('-ct', '--case_type', help='执行case类型[可选值: byCases,bySuite]', type=str)
     parser.add_argument('-cf', '--case_file', help='执行case文件[eg: test_Weapp_U.test_data_assert]', type=str)
     parser.add_argument('-cn', '--case_name', help='执行case名称[eg: test_weapp_case]', type=str)
     parser.add_argument('-cj', '--config_json', help='configJson文件路径[eg: config/wx_u_project/config.json]',
@@ -63,11 +63,6 @@ if __name__ == '__main__':
                 caseName = args.case_name
                 configJson = args.config_json
                 cmd = f"minitest -m cases.wx.{caseFile} --case {caseName} -c {configJson}"
-            case "byFile":
-                caseFile = args.case_file
-                configJson = args.config_json
-                suiteJson = args.config_suite
-                cmd = f"minitest -m cases.wx.{caseFile} -s {suiteJson} -c {configJson} --mode parallel"
             case "bySuite":
                 configJson = args.config_json
                 suiteJson = args.config_suite
