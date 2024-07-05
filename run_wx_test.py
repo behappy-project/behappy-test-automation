@@ -67,7 +67,7 @@ if __name__ == '__main__':
                 caseFile = args.case_file
                 configJson = args.config_json
                 suiteJson = args.config_suite
-                cmd = f"minitest -m cases.wx.{caseFile} -s {suiteJson}"
+                cmd = f"minitest -m cases.wx.{caseFile} -s {suiteJson} -c {configJson} --mode parallel"
             case "bySuite":
                 configJson = args.config_json
                 suiteJson = args.config_suite
