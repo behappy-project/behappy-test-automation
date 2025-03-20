@@ -9,6 +9,7 @@ __author__ = 'xiaowu'
 import asyncio
 import time
 import pyautogui
+import uuid
 import ujson
 import threading
 import traceback
@@ -430,7 +431,7 @@ class BrowserOperator:
         right = webElement.location['x'] + webElement.size['width']
         bottom = webElement.location['y'] + webElement.size['height']
         # 进行屏幕截图
-        image_file_name = DateTimeTool.getNowTime('%Y%m%d%H%M%S%f_') + '%s.png' % image_file_name
+        image_file_name = DateTimeTool.getNowTime(f"%Y%m%d%H%M%S%f_{str(uuid.uuid4()).replace('-', '')}_") + '%s.png' % image_file_name
         if not os.path.exists('output/tmp/' + self._config.current_browser):
             os.mkdir('output/tmp/' + self._config.current_browser)
         image_file_name = os.path.abspath(
@@ -509,6 +510,20 @@ class BrowserOperator:
                 self._driver.execute_script("arguments[0].scrollIntoView();", webElement)
             else:
                 self._driver.execute_script("arguments[0].scrollIntoView(false);", webElement)
+
+    def scroll_to_bottom(self, element=None):
+        """
+        滑到最下方
+        :return:
+        """
+        # 将鼠标移动到目标区域
+        actions = ActionChains(self._driver)
+        # 滑动指定区域
+        if element is not None:
+            actions.move_to_element(element).perform()
+        actions.send_keys(Keys.END).perform()
+        time.sleep(1)
+
 
     def move_by_offset(self, x, y):
         """鼠标左键点击，x为横坐标，y为纵坐标
@@ -592,6 +607,8 @@ class BrowserOperator:
         :param elementInfo:
         :return:
         """
+        if not self.is_element_exists(elementInfo, highlight_seconds):
+            return []
         webElements = None
         locator_type = elementInfo.locator_type
         locator_value = elementInfo.locator_value
@@ -828,11 +845,14 @@ class BrowserOperator:
         # 清除cookie
         self._driver.delete_all_cookies()
         # 获取domain
-        start = login_url.find('//') + 2  # 获取域名开始的位置
-        domain = login_url[start:len(login_url)]  # 截取域名
+        domain_start = login_url.find('//') + 2
+        domain_end = login_url.find('/' ,login_url.find('/') + 2)
+        domain = login_url[domain_start:domain_end]  # 截取域名
         cookie_arr = str(cookie).split(";")
         cookies = []
         for i, cookie in enumerate(cookie_arr):
+            if len(cookie) == 0:
+                continue
             _ = cookie.strip().split("=")
             name = _[0]
             value = _[1]
