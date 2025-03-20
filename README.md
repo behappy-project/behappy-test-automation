@@ -1,6 +1,6 @@
 # 技术栈
 
-> **要求：python3.10+**
+> **要求：python3.10**
 >
 > - pytest + selenium + allure + xxl-job
 > - 小程序：minium 【腾讯官方自动化框架】 + 微信开发者工具【开发者工具仅提供mac/windows，同时也没有对应的无头测试方案】
